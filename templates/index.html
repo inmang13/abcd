@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USGS Time Series App</title>
+</head>
+<body>
+    <h1>USGS Time Series Data Viewer</h1>
+    <form method="POST">
+        <label for="site_number">Site Number:</label>
+        <input type="text" id="site_number" name="site_number" required>
+        
+        <label for="start_date">Start Date (YYYY-MM-DD):</label>
+        <input type="date" id="start_date" name="start_date" required>
+        
+        <label for="end_date">End Date (YYYY-MM-DD):</label>
+        <input type="date" id="end_date" name="end_date" required>
+        
+        <input type="submit" value="Get Data">
+    </form>
+    
+    {% if plot_url %}
+        <h2>Discharge Time Series Plot:</h2>
+        <img src="data:image/png;base64,{{ plot_url }}" alt="Time Series Plot">
+    {% elif error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
