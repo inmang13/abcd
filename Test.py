@@ -15,6 +15,9 @@ def grabQ(site_no, start_date, end_date):
     :param end_date: End date for the data retrieval (YYYY-MM-DD)
     :return: A cleaned DataFrame with Discharge data
     """
+
+    print(site_no)
+    print(start_date)
     df=nwis.get_dv(
                 sites=site_no,
                 parameterCd="00060",
@@ -53,17 +56,27 @@ def create_plot(df):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        site_number = request.form['site_number']
+        site_number = request.form['site_number'].strip()  # Get user-entered site number
+        preset_site_number = request.form['preset_site_number']  # Get selected preset site number
+        
+        # If a preset site number was selected, use it; otherwise, use the custom site number
+        if preset_site_number:
+            site_number = preset_site_number
+        
         start_date = request.form['start_date']
         end_date = request.form['end_date']
-        data = grabQ(site_number, start_date, end_date)
         
-        # Check if data is returned
+        # Ensure a site number was entered or selected
+        if not site_number:
+            return render_template('index.html', error='Please enter or select a valid USGS site number.')
+
+        data = grabQ(site_number, start_date, end_date)
+
         if data is not None and not data.empty:
             plot_url = create_plot(data)
-            return render_template('index.html', plot_url=plot_url)
+            return render_template('index.html', plot_url=plot_url, site_number=site_number)
         else:
-            return render_template('index.html', error='No data found for the specified parameters.')
+            return render_template('index.html', error='No data found for the specified parameters.', site_number=site_number)
     
     return render_template('index.html')
 

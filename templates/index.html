@@ -3,28 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USGS Time Series App</title>
+    <title>Discharge Data</title>
 </head>
 <body>
-    <h1>USGS Time Series Data Viewer</h1>
+    <h1>Retrieve USGS Discharge Data</h1>
+    
     <form method="POST">
-        <label for="site_number">Site Number:</label>
-        <input type="text" id="site_number" name="site_number" required>
-        
+        <!-- Select a Site Number (either preset or custom) -->
+        <label for="site_number">USGS Site Number:</label>
+        <input type="text" id="site_number" name="site_number" value="{{ site_number }}" required>
+
+        <label for="preset_site_number">Or select a preset site number:</label>
+        <select id="preset_site_number" name="preset_site_number">
+            <option value="">--Select a Preset--</option>
+            <option value="01234567">Preset Site 1</option>
+            <option value="01234568">Preset Site 2</option>
+            <option value="01234569">Preset Site 3</option>
+        </select>
+
         <label for="start_date">Start Date (YYYY-MM-DD):</label>
         <input type="date" id="start_date" name="start_date" required>
         
         <label for="end_date">End Date (YYYY-MM-DD):</label>
         <input type="date" id="end_date" name="end_date" required>
-        
-        <input type="submit" value="Get Data">
+
+        <button type="submit">Retrieve Data</button>
     </form>
-    
+
     {% if plot_url %}
-        <h2>Discharge Time Series Plot:</h2>
-        <img src="data:image/png;base64,{{ plot_url }}" alt="Time Series Plot">
-    {% elif error %}
-        <p style="color:red;">{{ error }}</p>
+    <h3>Discharge Data Plot:</h3>
+    <img src="data:image/png;base64,{{ plot_url }}" alt="Plot">
+    {% endif %}
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
     {% endif %}
 </body>
 </html>
