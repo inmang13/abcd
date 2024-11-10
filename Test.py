@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request
+
+from flask import Flask, render_template, request, jsonify
 from dataretrieval import nwis  # For USGS data
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io
 import time
@@ -165,44 +168,46 @@ def create_plot(data):
     plt.close()
     return base64.b64encode(buf.getvalue()).decode('utf8')
 
+def run_scenario_analysis(a, b, c, d):
+    print(a,b,c,d)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         location = request.form['location']
-        usgs_site_id = request.form['usgs_site_id'].strip()  # User entered USGS site ID
-        noaa_site_id = request.form['noaa_site_id'].strip()  # User entered NOAA site ID
         start_date = request.form['start_date']
         end_date = request.form['end_date']
-        print(start_date)
 
-        # If a location is selected from presets, use the corresponding site IDs
+        # Check if the location is in the preset locations
         if location in PRESET_LOCATIONS:
             usgs_site_id = PRESET_LOCATIONS[location]['usgs_site_id']
             noaa_site_id = PRESET_LOCATIONS[location]['noaa_site_id']
+        else:
+            # If no location is selected or not in the preset list, show an error
+            return render_template('index.html', error="Please select a valid location.", preset_locations=PRESET_LOCATIONS)
 
-        # Ensure a valid site ID for both USGS and NOAA
-        if not usgs_site_id or not noaa_site_id:
-            return render_template('index.html', error='Please enter valid USGS and NOAA site IDs or select a location.')
-
-        print(usgs_site_id)
-        print(noaa_site_id)
-        # Fetch data from USGS and NOAA
+        # Fetch data from USGS and NOAA using the preset site IDs
         usgs_data = grab_usgs_data(usgs_site_id, start_date, end_date)
         noaa_data = grab_noaa_data(noaa_site_id, start_date, end_date)
-        merged_df  = merge_data(usgs_data,noaa_data)
-        
 
-        if merged_df is not None:
+        # Merge the data from USGS and NOAA
+        merged_df = merge_data(usgs_data, noaa_data)
+
+        if merged_df is not None and not merged_df.empty:
             print("Merging was successful!")
             print(merged_df.head())
-            plot_url = create_plot(merged_df)
-            return render_template('index.html', plot_url=plot_url, usgs_site_id=usgs_site_id, noaa_site_id=noaa_site_id)
-        else:
-            print("Merging failed. merged_df is None.")
-            return render_template('index.html', error='No data found for the specified parameters.')
 
-    return render_template('index.html')
+            # Create the plot
+            plot_url = create_plot(merged_df)
+            return render_template('index.html', plot_url=plot_url, location=location, preset_locations=PRESET_LOCATIONS)
+
+        else:
+            print("Merging failed. merged_df is None or empty.")
+            error_message = 'No data found for the specified parameters.'
+            return render_template('index.html', error=error_message, preset_locations=PRESET_LOCATIONS)
+
+    # For GET request, render the page directly
+    return render_template('index.html', preset_locations=PRESET_LOCATIONS)
 
 if __name__ == '__main__':
     app.run(debug=True)

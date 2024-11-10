@@ -3,46 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retrieve Location Data</title>
+    <title>Data Retrieval and Model Calibration</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Retrieve Location Data</h1>
-    
-    <form method="POST">
-        <!-- Select Location from Predefined Options -->
-        <label for="location">Select a Location:</label>
-        <select id="location" name="location">
-            <option value="">--Select a Location--</option>
-            <option value="Bridgewater, MA">Bridgewater, MA</option>
-            <option value="Boston, MA">Boston, MA</option>
-            <option value="Providence, RI">Providence, RI</option>
-        </select>
 
-        <!-- OR, Enter Custom USGS Site ID -->
-        <label for="usgs_site_id">Enter USGS Site ID:</label>
-        <input type="text" id="usgs_site_id" name="usgs_site_id" value="{{ usgs_site_id }}">
+<div class="container mt-4">
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="location-tab" data-toggle="tab" href="#location" role="tab" aria-controls="location" aria-selected="true">Location Data</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="model-tab" data-toggle="tab" href="#model" role="tab" aria-controls="model" aria-selected="false">Model Calibration</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="scenario-tab" data-toggle="tab" href="#scenario" role="tab" aria-controls="scenario" aria-selected="false">Scenario Analysis</a>
+        </li>
+    </ul>
 
-        <!-- OR, Enter Custom NOAA Site ID -->
-        <label for="noaa_site_id">Enter NOAA Site ID:</label>
-        <input type="text" id="noaa_site_id" name="noaa_site_id" value="{{ noaa_site_id }}">
-
-        <!-- Select Date Range -->
-        <label for="start_date">Start Date (YYYY-MM-DD):</label>
-        <input type="date" id="start_date" name="start_date" required>
+    <!-- Tab Content -->
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="location" role="tabpanel" aria-labelledby="location-tab">
+            <h1>Retrieve Location Data</h1>
+            <form method="POST" id="location_form">
+                <label for="location">Select Location:</label>
+                <select id="location" name="location" required>
+                    <option value="">--Select a Location--</option>
+                    {% for location, sites in preset_locations.items() %}
+                        <option value="{{ location }}">{{ location }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <label for="start_date">Start Date (YYYY-MM-DD):</label>
+                <input type="date" id="start_date" name="start_date" required>
+                <br>
+                <label for="end_date">End Date (YYYY-MM-DD):</label>
+                <input type="date" id="end_date" name="end_date" required>
+                <br>
+                <button type="submit">Retrieve Data</button>
+            </form>
         
-        <label for="end_date">End Date (YYYY-MM-DD):</label>
-        <input type="date" id="end_date" name="end_date" required>
+            <h3>Location Data Plot:</h3>
+            <div id="plot-container">
+                {% if plot_url %}
+                    <img src="data:image/png;base64,{{ plot_url }}" alt="Plot" class="img-fluid">
+                {% else %}
+                    <p>No plot available.</p>
+                {% endif %}
+            </div>
+        </div>
 
-        <button type="submit">Retrieve Data</button>
-    </form>
+        <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="model-tab">
+            <h1>Model Calibration</h1>
+            <p>Here you can calibrate the model using the selected data.</p>
+        </div>
 
-    {% if plot_url %}
-    <h3>Location Data Plot:</h3>
-    <img src="data:image/png;base64,{{ plot_url }}" alt="Plot">
-    {% endif %}
+        <div class="tab-pane fade" id="scenario" role="tabpanel" aria-labelledby="scenario-tab">
+            <h1>Scenario Analysis</h1>
+            <p>Content for Scenario Analysis will be displayed here.</p>
+        </div>
+    </div>
+</div>
 
-    {% if error %}
-    <p style="color:red;">{{ error }}</p>
-    {% endif %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
