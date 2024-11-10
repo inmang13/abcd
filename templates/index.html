@@ -56,8 +56,45 @@
 
         <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="model-tab">
             <h1>Model Calibration</h1>
-            <p>Here you can calibrate the model using the selected data.</p>
-        </div>
+            <form method="POST" id="model_form">
+                <label for="a">Parameter a:</label>
+                <input type="number" id="a" name="a" step="any" value="{{ a if a is not none else '' }}" required>
+                <br>
+                <label for="b">Parameter b:</label>
+                <input type="number" id="b" name="b" step="any" value="{{ b if b is not none else '' }}" required>
+                <br>
+                <label for="c">Parameter c:</label>
+                <input type="number" id="c" name="c" step="any" value="{{ c if c is not none else '' }}" required>
+                <br>
+                <label for="d">Parameter d:</label>
+                <input type="number" id="d" name="d" step="any" value="{{ d if d is not none else '' }}" required>
+                <br>
+                <label for="e">Parameter e:</label>
+                <input type="number" id="e" name="e" step="any" value="{{ e if e is not none else '' }}" required>
+                <br>
+                <label for="Tb">Temperature Threshold (Tb):</label>
+                <input type="number" id="Tb" name="Tb" step="any" value="{{ Tb if Tb is not none else '' }}" required>
+                <br>
+                <label for="lat">Latitude:</label>
+                <input type="number" id="lat" name="lat" step="any" value="{{ lat if lat is not none else '' }}" required>
+                <br>
+                
+                <!-- New Fields for S_init, G_init, and Area -->
+                <label for="S_init">S_init (Initial S Value):</label>
+                <input type="number" id="S_init" name="S_init" step="any" value="{{ S_init if S_init is not none else '' }}" required>
+                <br>
+        
+                <label for="G_init">G_init (Initial G Value):</label>
+                <input type="number" id="G_init" name="G_init" step="any" value="{{ G_init if G_init is not none else '' }}" required>
+                <br>
+        
+                <label for="Area">Area (in square meters):</label>
+                <input type="number" id="Area" name="Area" step="any" value="{{ Area if Area is not none else '' }}" required>
+                <br>
+        
+                <button type="submit">Submit Calibration</button>
+            </form>
+        </div>        
 
         <div class="tab-pane fade" id="scenario" role="tabpanel" aria-labelledby="scenario-tab">
             <h1>Scenario Analysis</h1>
