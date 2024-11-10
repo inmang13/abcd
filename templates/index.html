@@ -3,24 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discharge Data</title>
+    <title>Retrieve Location Data</title>
 </head>
 <body>
-    <h1>Retrieve USGS Discharge Data</h1>
+    <h1>Retrieve Location Data</h1>
     
     <form method="POST">
-        <!-- Select a Site Number (either preset or custom) -->
-        <label for="site_number">USGS Site Number:</label>
-        <input type="text" id="site_number" name="site_number" value="{{ site_number }}" required>
-
-        <label for="preset_site_number">Or select a preset site number:</label>
-        <select id="preset_site_number" name="preset_site_number">
-            <option value="">--Select a Preset--</option>
-            <option value="01234567">Preset Site 1</option>
-            <option value="01234568">Preset Site 2</option>
-            <option value="01234569">Preset Site 3</option>
+        <!-- Select Location from Predefined Options -->
+        <label for="location">Select a Location:</label>
+        <select id="location" name="location">
+            <option value="">--Select a Location--</option>
+            <option value="Bridgewater, MA">Bridgewater, MA</option>
+            <option value="Boston, MA">Boston, MA</option>
+            <option value="Providence, RI">Providence, RI</option>
         </select>
 
+        <!-- OR, Enter Custom USGS Site ID -->
+        <label for="usgs_site_id">Enter USGS Site ID:</label>
+        <input type="text" id="usgs_site_id" name="usgs_site_id" value="{{ usgs_site_id }}">
+
+        <!-- OR, Enter Custom NOAA Site ID -->
+        <label for="noaa_site_id">Enter NOAA Site ID:</label>
+        <input type="text" id="noaa_site_id" name="noaa_site_id" value="{{ noaa_site_id }}">
+
+        <!-- Select Date Range -->
         <label for="start_date">Start Date (YYYY-MM-DD):</label>
         <input type="date" id="start_date" name="start_date" required>
         
@@ -31,7 +37,7 @@
     </form>
 
     {% if plot_url %}
-    <h3>Discharge Data Plot:</h3>
+    <h3>Location Data Plot:</h3>
     <img src="data:image/png;base64,{{ plot_url }}" alt="Plot">
     {% endif %}
 
