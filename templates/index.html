@@ -45,9 +45,9 @@
             </form>
         
             <h3>Location Data Plot:</h3>
-            <div id="plot-container">
-                {% if plot_url %}
-                    <img src="data:image/png;base64,{{ plot_url }}" alt="Plot" class="img-fluid">
+            <div id="plot-container>
+                {% if climate_plot_url %}
+                    <img src="data:image/png;base64,{{ climate_plot_url }}" alt="Plot" class="img-fluid">
                 {% else %}
                     <p>No plot available.</p>
                 {% endif %}
@@ -94,6 +94,14 @@
         
                 <button type="submit">Submit Calibration</button>
             </form>
+            <h3>Model Data Plot:</h3>
+            <div id="plot-container">
+                {% if calibration_plot_url %}
+                    <img src="data:image/png;base64,{{ calibration_plot_url }}" alt="Plot" class="img-fluid">
+                {% else %}
+                    <p>No plot available.</p>
+                {% endif %}
+            </div>
         </div>        
 
         <div class="tab-pane fade" id="scenario" role="tabpanel" aria-labelledby="scenario-tab">

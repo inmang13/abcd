@@ -336,13 +336,13 @@ def index():
             print(merged_df.head())
 
             # Create the plot
-            plot_url = climate_plot(merged_df)
+            climate_plot_url = climate_plot(merged_df)
 
             model_result = model(merged_df, a, b, c, d, e, Tb, lat, S_init, G_init, Area)
 
             return render_template(
                 'index.html', 
-                plot_url=plot_url, 
+                climate_plot_url=climate_plot_url, 
                 model_result=model_result,
                 location=location,
                 start_date=start_date,
@@ -360,6 +360,34 @@ def index():
 
     # For GET request, render the page directly
     return render_template('index.html', preset_locations=PRESET_LOCATIONS)
+
+
+
+@app.route('/calibrate', methods=['POST'])
+def calibrate_model():
+    # Retrieve data passed in the POST request
+    a = request.form.get('a', type=float, default=0.98)
+    b = request.form.get('b', type=float, default=5.05)
+    c = request.form.get('c', type=float, default=0.71)
+    d = request.form.get('d', type=float, default=0.9)
+    e = request.form.get('e', type=float, default=50)
+    Tb = request.form.get('Tb', type=float, default=-4.81)
+    lat = request.form.get('lat', type=float, default=0.732)
+    S_init = request.form.get('S_init', type=float, default=10)
+    G_init = request.form.get('G_init', type=float, default=2)
+    Area = request.form.get('Area', type=float, default=167040)
+
+    # Assuming `merged_df` is obtained from the main form submission
+    merged_df = ...  # Retrieve or cache merged_df
+
+    if merged_df is not None and not merged_df.empty:
+        model_result = model(merged_df, a, b, c, d, e, Tb, lat, S_init, G_init, Area)
+        calibration_plot_url = calibration_plot(model_result)
+
+        # Return the calibration plot as JSON
+        return jsonify({'plot_url': calibration_plot_url})
+    else:
+        return jsonify({'error': 'Merging failed or no data found.'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
