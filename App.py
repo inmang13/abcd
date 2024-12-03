@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import requests
 import plotly.graph_objects as go
-from math import cos, sin, acos, pi, tan
+from math import pi
 from datetime import datetime, timedelta, date
 from scipy.optimize import minimize
 
