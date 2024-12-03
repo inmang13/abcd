@@ -12,24 +12,25 @@ The **ABCD Model Calibration App** is a web application designed to assist in th
 ## Installation
 
 ### 1. Clone the repository
-```bash
+```
 git clone https://github.com/your-username/abcd-model-calibration.git
-
+```
 ### 2. Create a Conda environment (optional but recommended)
-```bash
+```
 conda create --name ENV python=3.8
-
+```
 ### 3. Activate the environment
-```bash
+```
 conda activate ENV
-
+```
 ### 4. Install the required dependencies
-```bash
+```
 pip install -r requirements.txt
-
+```
 ## Installation
 ## Running the App Locally
 To start the app, run the following command in your terminal:
-```bash
+```
 streamlit run app.py
+```
 This will start the Streamlit application and open it in your default web browser.
