@@ -28,7 +28,7 @@ conda activate ENV
 pip install -r requirements.txt
 ```
 ## Installation
-## Running the App Locally
+### Running the App Locally
 To start the app, run the following command in your terminal:
 ```
 streamlit run app.py
