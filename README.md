@@ -1,7 +1,7 @@
-# ABCD Model Calibration App
+# ABCD Water Balance Model Calibration App
 
 ## Description
-The **ABCD Model Calibration App** is a web application designed to assist in the calibration of a simple hydrological model (ABCD model) using real-world climate and streamflow data. This app allows users to retrieve climate data (precipitation, temperature, etc.) from NOAA, along with observed streamflow data from USGS, and calibrate the model based on these inputs. Users can also explore future climate and hydrological scenarios based on the calibrated model.
+The **ABCD Water Balance Model Calibration App** is a web application designed to assist in the calibration of a simple hydrological model (ABCD model) using real-world climate and streamflow data. This app allows users to retrieve climate data (precipitation, temperature, etc.) from NOAA, along with observed streamflow data from USGS, and calibrate the model based on these inputs. Users can also explore future climate and hydrological scenarios based on the calibrated model.
 
 ## Features
 - **Data Retrieval**: Fetch climate data (precipitation, temperature) and streamflow data for selected locations and periods.
