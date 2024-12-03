@@ -33,4 +33,15 @@ To start the app, run the following command in your terminal:
 ```
 streamlit run app.py
 ```
-This will start the Streamlit application and open it in your default web browser.
+This will start the Streamlit application and open it in your default web browse.
+![1](https://github.com/user-attachments/assets/42fafa66-3963-4d44-92fa-94694a8480fb)
+#![2](https://github.com/user-attachments/assets/ccd67b48-80ac-4d65-af12-417c91d1ec1b)
+Sometimes the program gets stuck retrieving data from NOAA's API. If it is taking more than a minute to load, please refresh the page.
+
+## Calibrate Model
+Once climate data has been retrieved. Navigate to the Calibrate Model Tab.
+![3](https://github.com/user-attachments/assets/805e7229-9e34-47d4-8407-6e3d52ff24bd)
+![4](https://github.com/user-attachments/assets/b9052c48-2e6b-46e5-a229-1f70bc13d637)
+![5](https://github.com/user-attachments/assets/a484ca35-3dd6-42d0-abcb-c2d0e448cbb9)
+
+
