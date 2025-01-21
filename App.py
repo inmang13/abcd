@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import requests
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from math import pi
 from datetime import datetime, timedelta, date
 from scipy.optimize import minimize
@@ -520,26 +521,35 @@ with tab2:
         # Running the model with the parameters from session_state
         model1 = model(abcd_model, a, b, c, d, e, Tb, lat, S_init,G_init, area)
         st.write(model1.head())
+        rmse = np.sqrt(np.mean((model1['Flow'] - model1['SimFlow_CFS'])**2))
+
+        sorted_true_values = np.sort(model1['Flow'])
+        sorted_predicted_values = np.sort(model1['SimFlow_CFS'])
+        cdf_true_values = np.arange(1, len(sorted_true_values) + 1) / len(sorted_true_values)
+        cdf_predicted_values = np.arange(1, len(sorted_predicted_values) + 1) / len(sorted_predicted_values)
+
+
+
 
         # Create a plot comparing observed and simulated flow
-        fig3 = go.Figure()
+        Flow_TS = go.Figure()
 
         # Plot observed discharge data
-        fig3.add_trace(go.Scatter(x=model1['Date'], 
+        Flow_TS.add_trace(go.Scatter(x=model1['Date'], 
                                 y=model1['Flow'], 
                                 mode='lines', 
                                 name='Observed', 
                                 line=dict(color='blue', width=2)))
 
         # Plot simulated flow data
-        fig3.add_trace(go.Scatter(x=model1['Date'], 
+        Flow_TS.add_trace(go.Scatter(x=model1['Date'], 
                                 y=model1['SimFlow_CFS'], 
                                 mode='lines', 
                                 name='Simulated', 
                                 line=dict(color='red', dash='dash', width=2)))
 
         # Update layout to set title, axis labels, and grid
-        fig3.update_layout(
+        Flow_TS.update_layout(
             title='Calibration Plot: Observed vs Simulated Flow',
             xaxis_title='Date',
             yaxis_title='Flow (cfs)',
@@ -555,7 +565,61 @@ with tab2:
         )
 
         # Display the plot in Streamlit
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(Flow_TS, use_container_width=True)
+
+        calibration_plots = make_subplots(rows=1, cols=2,
+        column_widths=[0.5, 0.5]  # Give more space to the calibration plot
+    )
+
+        calibration_plots.add_trace(go.Scatter(
+            x=model1['Flow'], 
+            y=model1['SimFlow_CFS'], 
+            mode='markers',
+            marker=dict(color='rgba(0, 0, 0, 0.5)', size=8),
+            name='Calibration Data',
+            showlegend=False,
+            text=f'RMSE: {rmse:.2f}',
+            textposition="top right"), row=1, col=1)
+
+        calibration_plots.add_trace(go.Scatter(
+            x=[min(model1['Flow']), max(model1['Flow'])],
+            y=[min(model1['Flow']), max(model1['Flow'])],
+            mode='lines',
+            showlegend=False,
+            line=dict(color='red', dash='dash')), row=1, col=1)
+
+        calibration_plots.add_annotation(
+            text=f'RMSE: {rmse:.2f}',
+            x=0.95,  # Right side of the plot
+            y=0.05,  # Top of the plot
+            xref='x domain',
+            yref='y domain',
+            showarrow=False,
+            font=dict(size=14, color="black"),
+            align="center", row=1, col=1)
+
+        calibration_plots.update_xaxes(title_text="OBSERVED",row=1, col=1)
+        calibration_plots.update_yaxes(title_text="MODELED",row=1, col=1)
+
+        calibration_plots.add_trace(go.Scatter(
+            y=sorted_true_values, 
+            x=cdf_true_values, 
+            mode='lines', 
+            line=dict(color='black', width=2),
+            name='OBSERVED'), row=1, col=2)
+
+        calibration_plots.add_trace(go.Scatter(
+            y=sorted_predicted_values, 
+            x=cdf_predicted_values, 
+            mode='lines', 
+            line=dict(color='red', width=2),
+            name='MODELED'), row=1, col=2)
+
+        calibration_plots.update_xaxes(title_text="Cumulative Frequency",row=1, col=2)
+        calibration_plots.update_yaxes(title_text="Flow",row=1, col=2)
+   
+
+        st.plotly_chart(calibration_plots)
 
         def action():
             [a_updated, b_updated, c_updated, d_updated, e_updated] = calibration(abcd_model, a, b, c, d, e, Tb, lat, S_init, G_init, area)
